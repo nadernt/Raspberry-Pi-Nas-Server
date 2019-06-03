@@ -1,19 +1,10 @@
 ## MyNas
 
-Credentials
-
-Raspbian 
-	User: pi 
-	Pass: asdasd
-
-​	User: root
-​	Pass: root
-
-MySQL Server
-	user:root
-	pass:
+A NAS server project based on Raspberry Pi. 
 
 
+
+###### Installation
 
 Update and upgrading Raspbian: 
 
@@ -24,7 +15,7 @@ sudo apt-get dist-upgrade
 
 
 
-Installing Web Stack
+###### Installing Web Stack
 
 Installing Apache web server
 
@@ -46,7 +37,7 @@ sudo apt install mysql-server php-mysql
 
 
 
-Apache .httaccess File Setting
+###### Apache .httaccess File Setting
 
 **Issue:** The local .httaccess rewrite mode does not work on the some versions. You must fix it as follow.
 
@@ -66,14 +57,16 @@ Change AllowOverride None to AllowOverride All directory text like this;
 </Directory>
 ```
 
-The above change on some versions will not take effect fix it by bellow lines.  
+The above change on some versions will not take effect, fix it by bellow lines.  
 
 ```bash
 sudo a2enmod rewrite
 sudo systemctl restart apache2
 ```
 
-Preparing the Admin panel.
+
+
+###### Preparing the Admin panel
 
 - Delete the index.html file from /var/www/html/ 
 
@@ -165,9 +158,9 @@ Preparing the Admin panel.
 
 
 
-System Startup Settings
+###### System Startup Settings
 
-Creating services programs:
+Give the execution permission to services programs and put it in the start up.
 
 ```bash
 cd /var/www/html
@@ -203,9 +196,7 @@ exit 0
 
 
 
-Installing Samba on Raspberry Pi:
-
-Update and Install: 
+###### Installing Samba on Raspberry Pi
 
 ```bash
 sudo apt-get install samba samba-common-bin smbclient cifs-utils
@@ -214,16 +205,18 @@ sudo apt-get install samba samba-common-bin smbclient cifs-utils
 Sharing a folder for use by Windows
 1- Connect your external drive! (e.g. memory stick or external hard drive).
 
-2- Edit samba config file file. 
+2- Find the path to the external storage and keep it for the next setting. We must to tell to samba to look at this path as windows share folder. 
 
-```bash
-sudo nano /etc/samba/smb.conf
-```
-
-3- Find the path to the external storage and keep it for the next setting. We must to tell to samba to look at this path as folder share point. Note: this software works only with one external storage. So do not connect more than one storage.
+​	Note: this software works only with one external storage. So do not connect more than one storage.
 
 ```bash
 ls /media/pi
+```
+
+3- Edit samba config file file. 
+
+```bash
+sudo nano /etc/samba/smb.conf
 ```
 
 4- Add following lines to the end of the config file 
@@ -246,18 +239,23 @@ create mask = 0777
 directory mask = 0777
 ```
 
-
-
 **Note:** In the same file, find the workgroup line, and if it is necessary, change it to the name of the workgroup of your local Windows network. 
-4- If you're using SMB1 and your Windows box has had the recent creator update then you can have issues, as by default SMB1 is disabled (due to the security risks highlighted by the recent Wannacry issue).
 
-Check Control Panel > Programs & Features > Turn Windows features on or off and see if SMB 1.0/CIFS File Sharing Support is enabled or disabled.
+5- We must stop auto start behavior of Samba at booting process of OS. To do this, open this smbd.conf and comment out this line *start on local-filesystem*
 
-If it's disabled, try enabling it and see if that resolves your issue.
+```bash
+sudo nano /etc/init/smbd.conf
+```
 
-However it's not really recommended to keep this enabled long-term due to the aforesaid security risks in SMB1, so also consider switching to a more secure solution (SMB2, SMB3, NFS etc) if possible.
+```
+#start on local-filesystem
+```
 
-Install Adafruit CircuitPython (here explanations are from Adafruit)
+
+
+###### Install Adafruit CircuitPython (here explanations are from Adafruit)
+
+I used this <https://www.adafruit.com/product/3527> model OLED display from Adafruit for MyNas project.
 
 ```bash
 sudo pip3 install adafruit-circuitpython-ssd1306
@@ -303,3 +301,7 @@ sudo raspi-config
 **Note:** when the machine is off and power cord is removed then connect the oled module and turn on the machine.
 
 ![oled](oled.jpg)
+
+
+
+gpl
