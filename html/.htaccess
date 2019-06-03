@@ -1,0 +1,6 @@
+RewriteEngine On    # Turn on the rewriting engine
+ 
+RewriteRule ^api/([0-9a-zA-Z_-]*)$ api.php?command=$1 [NC,L] 
+RewriteRule ^api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)$ api.php?command=$1&var1=$2 [NC,L] 
+#RewriteRule ^api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)$ api.php?command=$1&ip=$2 [NC,L] 
+RewriteRule ^api/([0-9a-zA-Z_-]*)/([0-9a-zA-Z_-]*)/([A-Za-z0-9\s]+)$ api.php?command=$1&var1=$2&var2=$3 [NC,L] 
