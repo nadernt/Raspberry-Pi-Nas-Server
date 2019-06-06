@@ -1,6 +1,6 @@
 ## MyNas
 
-A NAS server project based on Raspberry Pi. 
+A NAS server project based on Raspberry Pi and Samba. 
 
 
 
