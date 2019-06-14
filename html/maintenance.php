@@ -25,7 +25,7 @@ $server_settings = $server->get_wifi_settings();
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-config" content="image/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
-    <title>Admin Panel v1.2</title>
+    <title>Maintenance Panel v1.2</title>
     <link href="./lib/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="./lib/js/jquery-3.4.1.min.js"></script>
     <script src="./lib/vendor/bootstrap/js/bootstrap.min.js"></script>
@@ -160,6 +160,13 @@ $server_settings = $server->get_wifi_settings();
                         <p>Type the default ip address of system in IP4 format and then click on <em>Save and
                                 Reboot</em> button to apply the changes.<br>
                             <strong>Note:</strong> After click machine will reboot.</p>
+                        <div class="alert alert-primary" role="alert" style="width:50%;">
+                            <h5 class="alert-heading">Storage path:</h5>
+                            <p><?php echo $server->get_media_path()[0];?></p>
+                            <hr>
+                            <h5 class="alert-heading">Networks:</h5>
+                            <p class="mb-0"><?php echo $server->ListOfNetworkAdapters();?></p>
+                        </div>
                         <form class="form" onsubmit="return isValidForm()">
                             <input type="hidden" id="is_mounted" name="is_mounted"
                                 value="<?php echo $server->get_media_path()[0];?>">
@@ -168,7 +175,7 @@ $server_settings = $server->get_wifi_settings();
                                     <label for="ip_address" class="col-form-label-sm"><b>IP Address:</b></label>
                                     <input type="text" pattern="\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}" class="form-control"
                                         id="ip_address" placeholder="IP address" name="ip_address"
-                                        value="<?php echo $_SERVER['SERVER_ADDR'];?>" required>
+                                        value="<?php echo $server->GetEthernet();?>" required>
                                 </div>
                             </div>
                             <div class="row">
@@ -181,7 +188,8 @@ $server_settings = $server->get_wifi_settings();
                                 </div>
                             </div>
                         </form>
-                        <button type="submit" id="reboot_ipworkgroup" class="btn btn-primary mb-2" onclick="save_ip()">Save
+                        <button type="submit" id="reboot_ipworkgroup" class="btn btn-primary mb-2"
+                            onclick="save_ip()">Save
                             and Reboot</button>
                         <button type="submit" id="shutdown" class="btn btn-danger mb-2" onclick="shutdown()">Shutdown
                             Machine</button>
@@ -226,8 +234,8 @@ $server_settings = $server->get_wifi_settings();
                             <div class="row">
                                 <div class="form-group col-xs-5 col-lg-3">
                                     <label for="passwd" class="col-form-label-sm"><b>Password:</b></label>
-                                    <input type="password" class="form-control" id="passwd" placeholder="Password" name="passwd"
-                                        autocomplete="off" value="<?php 
+                                    <input type="password" class="form-control" id="passwd" placeholder="Password"
+                                        name="passwd" autocomplete="off" value="<?php 
                                         if($server_settings['active']===true)
                                             if($server_settings['current_ssi_pass']['ssid']!==null)
                                                 echo $server_settings['current_ssi_pass']['password']
@@ -265,7 +273,7 @@ $server_settings = $server->get_wifi_settings();
     var counter = 0;
 
     document.getElementById("wifi").checked = <?php echo json_encode($server_settings['active']);?>;
-    
+
     show_hideload(false);
 
     function show_hideload(show_hide_loading) {
@@ -323,9 +331,9 @@ $server_settings = $server->get_wifi_settings();
             alert("Password is not valid!");
             return;
         }
-        
+
         show_hideload(true);
-        
+
         var _ssid = document.getElementById("ssid_name").value;
         var _password = document.getElementById("passwd").value;
 
@@ -352,7 +360,7 @@ $server_settings = $server->get_wifi_settings();
         data.append('password', _password.replace(/%20/g, '+'));
 
         xhr.open("POST", theUrl, true);
-        xhr.onerror = function () {
+        xhr.onerror = function() {
             console.log("** An error occurred during the transaction");
             show_hideload(false);
             counter = 90;
@@ -479,7 +487,7 @@ $server_settings = $server->get_wifi_settings();
         if ("reboot_ipworkgroup" === element)
             document.getElementById("reboot_ipworkgroup").innerHTML = "Reload on " + counter-- + "s";
         else if ("reboot_ssidpass" === element)
-            document.getElementById("reboot_ssidpass").innerHTML = "Reload on " + counter-- + "s";    
+            document.getElementById("reboot_ssidpass").innerHTML = "Reload on " + counter-- + "s";
         else if ("shutdown" === element)
             document.getElementById("shutdown").innerHTML = "Shutdown on " + counter-- + "s";
 
@@ -491,8 +499,7 @@ $server_settings = $server->get_wifi_settings();
             if ("reboot_ipworkgroup" === element) {
                 document.getElementById("reboot_ipworkgroup").innerHTML = "Refreshing the page";
                 window.location.replace("index.php");
-            }
-            else if ("reboot_ssidpass" === element) {
+            } else if ("reboot_ssidpass" === element) {
                 document.getElementById("reboot_ssidpass").innerHTML = "Refreshing the page";
                 window.location.replace("index.php");
             } else if ("shutdown" === element) {

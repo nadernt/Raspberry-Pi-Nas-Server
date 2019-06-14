@@ -73,6 +73,9 @@ fi
 'set_wifisettings')
     echo "reboot"
 ;;
+'list_network_devices')
+    sudo -S ip -o -4 addr show | awk '{print $2": "$4}'
+;;
 'reboot')
     echo "reboot"
     sudo reboot

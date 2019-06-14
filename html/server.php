@@ -1,6 +1,56 @@
 <?php
 class server
 {
+    public function ListOfNetworkAdapters(){
+        
+        $command = "/bin/sh /var/www/html/syscmd.sh list_network_devices";
+        exec($command, $output, $return);
+        if (!$return) {
+                
+            
+            $arrout=array();
+            for($i =0 ; $i<sizeof($output); $i++)
+            {
+                
+                $str = substr_replace($output[$i],"",strpos($output[$i],"/"),strlen($output[$i]));
+                
+                if(strpos($str,"127.0.0.1")===false)
+                {
+                    array_push($arrout,ucfirst($str));
+                }
+                
+            }
+            echo nl2br(implode("\r\n",$arrout));
+        } else {
+            return false;
+        }
+    }
+    
+    public function GetEthernet(){
+
+        $command = "/bin/sh /var/www/html/syscmd.sh list_network_devices";
+        exec($command, $output, $return);
+        if (!$return) {
+            $str;
+            for($i =0 ; $i<sizeof($output); $i++)
+            {
+                
+                $str = substr_replace($output[$i],"",strpos($output[$i],"/"),strlen($output[$i]));
+                
+                if(strpos($str,"eth")!==false)
+                {
+                break;
+                }
+                
+            }
+
+            $arrOut = explode(" ",$str);
+            echo $arrOut[1];
+
+        } else {
+            return false;
+        }
+    }
     // Function for basic field validation (present and neither empty nor only white space)
     private function IsNullOrEmptyString($str){
         return (!isset($str) || trim($str) === '');
