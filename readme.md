@@ -2,9 +2,9 @@
 
 A NAS server project based on Raspberry Pi and Samba. 
 
-
-
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+![oled](oled.jpg)
 
 ###### Installation
 
@@ -302,5 +302,5 @@ sudo raspi-config
 
 **Note:** when the machine is off and power cord is removed then connect the oled module and turn on the machine.
 
-![oled](oled.jpg)
+
 
